@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
@@ -42,7 +42,7 @@ export class BookingsController {
   }
 
   @Get()
-  async getAllBookingsForUser(@Query() req) {
+  async getAllBookingsForUser(@Req() req) {
     const userId = req.user.id;
     return await this.bookingsService.getAllBookingsForUser(userId); 
   }
@@ -50,5 +50,11 @@ export class BookingsController {
   @Get(':id')
   async getBookingByRoomId(@Param(':id') roomId: number) {
     return await this.bookingsService.getBookingByRoomId(roomId);
+  }
+
+  @Get()
+  async bookingHistory(@Req() req) {
+    const userId = req.user.id;
+    return await this.bookingsService.bookingHistory(userId);
   }
 }
