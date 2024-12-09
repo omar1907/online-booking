@@ -3,11 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Booking } from './entities/booking.entity';
 import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
+import { StatusEnum } from './enums/booking-status.enum';
 import { RoomsService } from 'src/rooms/rooms.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
-import { Room } from 'src/rooms/entities/rooms.entity';
-import { AvailabilityStatusEnum } from 'src/rooms/enum/available-status.enum';
-import { StatusEnum } from './enums/booking-status.enum';
 
 @Injectable()
 export class BookingsService {
@@ -15,7 +13,7 @@ export class BookingsService {
     @InjectRepository(Booking)
     private readonly bookingRepository: Repository<Booking>,
     private readonly userService: UsersService,
-    private readonly roomService: RoomsService,
+    private readonly roomsService: RoomsService,
   ) {}
 
   async createBooking(
@@ -24,7 +22,7 @@ export class BookingsService {
     roomId: number,
   ) {
     const user = await this.userService.findById(userId);
-    const room = await this.roomService.findOne(roomId);
+    const room = await this.roomsService.findOne(roomId);
     const isRoomAvailable = await this.isRoomAvailable(
       roomId,
       bookingDto.startDate,

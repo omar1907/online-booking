@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -63,19 +64,8 @@ export class RoomsController {
   ) {
     return await this.roomService.update(id, updateRoomDto);
   }
-
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  @Role(RoleEnum.ADMIN)
-  @Patch(':id/status')
-  async updateRoomStatus(
-    @Param('id') id: number,
-    @Body() status: UpdateRoomStatusDto,
-  ) {
-    return this.roomService.updateRoomStatus(id, status);
-  }
-
-  @Get('available')
-  async findAllAvailableRooms() {
-    return await this.roomService.findAllAvailableRooms();
+  @Delete(':id')
+  async deleteRoom(@Param('id') id: number) {
+    return await this.roomService.deleteRoom(id);
   }
 }

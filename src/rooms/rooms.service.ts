@@ -40,7 +40,7 @@ export class RoomsService {
       const room = await this.roomRepository.findOne({ where: { id } });
       if (!room) {
         this.logger.error(`No Room with id: ${id}`);
-        return new HttpException('Room not found', HttpStatus.NOT_FOUND);
+        throw new HttpException('Room not found', HttpStatus.NOT_FOUND);
       }
       Object.assign(room, updateRoomDto);
       await this.roomRepository.save(room);
@@ -179,5 +179,17 @@ export class RoomsService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  async deleteRoom(id: number) {
+    const room = await this.roomRepository.delete(id);
+    if (!room) {
+      throw new HttpException('Room not found', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      statusCode: HttpStatus.NO_CONTENT,
+      message: 'Room Deleted!',
+    };
   }
 }

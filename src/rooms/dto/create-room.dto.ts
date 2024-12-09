@@ -6,7 +6,6 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
-import { Entity } from 'typeorm';
 import { RoomTypeEnum } from '../enum/room-type.enum';
 import { Type } from 'class-transformer';
 import { AvailabilityStatusEnum } from '../enum/available-status.enum';

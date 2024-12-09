@@ -16,26 +16,26 @@ export class Booking {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  startDate: Date;
-
-  @Column()
-  endDate: Date;
-
   @Column({ default: StatusEnum.PENDING })
   status: StatusEnum;
 
   @Column('decimal')
   totalPrice: number;
 
-  @ManyToOne(() => User, (user) => user.bookings)
+  @ManyToOne(() => User, (user) => user.bookings, { eager: true })
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @ManyToOne(() => Room, (room) => room.bookings)
+  @ManyToOne(() => Room, (room) => room.bookings, { eager: true })
   @JoinColumn({ name: 'roomId' })
   room: Room;
 
-  @OneToOne(() => Payment, (payment) => payment.booking)
+  @OneToOne(() => Payment, (payment) => payment.booking, { eager: true })
   payment: Payment;
+
+  @Column()
+  startDate: Date;
+
+  @Column()
+  endDate: Date;
 }
