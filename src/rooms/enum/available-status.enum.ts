@@ -1,4 +1,5 @@
 export enum AvailabilityStatusEnum {
-  AVAILABLE = 'Available',
-  UNAVAILABLE = 'Unavailable',
+  AVAILABLE = 'AVAILABLE',
+  UNAVAILABLE = 'UNAVAILABLE',
+  MAINTENANCE = 'MAINTENANCE',
 }
