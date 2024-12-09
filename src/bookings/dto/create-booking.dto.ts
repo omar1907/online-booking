@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { IsDateString, IsNotEmpty } from 'class-validator';
 
 export class CreateBookingDto {

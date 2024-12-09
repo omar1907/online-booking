@@ -1,7 +1,8 @@
+/* eslint-disable prettier/prettier */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Booking } from './entities/booking.entity';
-import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm'; 
 import { UsersService } from 'src/users/users.service';
 import { StatusEnum } from './enums/booking-status.enum';
 import { RoomsService } from 'src/rooms/rooms.service';
