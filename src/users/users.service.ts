@@ -1,7 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entites/user.entity';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { RoleService } from 'src/role/role.service';
 
 @Injectable()
@@ -68,7 +69,7 @@ export class UsersService {
     };
   }
 
-  async userBookings() {}
+  
   async deleteUser(id: number) {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
@@ -79,5 +80,41 @@ export class UsersService {
       statusCode: HttpStatus.OK,
       message: 'User Deleted Successfully',
     };
+  }
+
+  async updateResetToken(userId: number, resetCode: string): Promise<void> {
+    await this.userRepository.update(
+      { id: userId },
+      {
+        resetCode,
+        resetCodeExpiry: new Date(Date.now() + 60 * 60 * 1000), // 1-hour expiry time
+      },
+    );
+  }
+
+  async findOneByresetCode(token: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { resetCode: token, resetCodeExpiry: MoreThan(new Date()) },
+    });
+    if (!user) {
+      throw new NotFoundException(
+        `UserId who have token : ${token} Not Found!`,
+      );
+    }
+    return user;
+  }
+
+  async updatePassword(userId: number, newPassword: string): Promise<void> {
+    await this.userRepository.update(
+      { id: userId },
+      { password: newPassword },
+    );
+  }
+
+  async clearResetCode(userId: number) {
+    await this.userRepository.update(
+      { id: userId },
+      { resetCode: null, resetCodeExpiry: null },
+    );
   }
 }

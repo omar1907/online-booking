@@ -10,6 +10,7 @@ import { BookingsModule } from './bookings/bookings.module';
 import { RoomsModule } from './rooms/rooms.module';
 import { PaymentsModule } from './payments/payments.module';
 import { LoggerModule } from './logger/logger.module';
+import { MailModule } from './mail/mail.module';
 
 import * as Joi from 'joi';
 
@@ -45,6 +46,7 @@ import * as Joi from 'joi';
     RoomsModule,
     PaymentsModule,
     LoggerModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

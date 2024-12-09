@@ -38,7 +38,7 @@ export class RoomsService {
       const room = await this.roomRepository.findOne({ where: { id } });
       if (!room) {
         this.logger.error(`No Room with id: ${id}`);
-        return new HttpException('Room not found', HttpStatus.NOT_FOUND);
+        throw new HttpException('Room not found', HttpStatus.NOT_FOUND);
       }
       Object.assign(room, updateRoomDto);
       await this.roomRepository.save(room);
@@ -87,19 +87,15 @@ export class RoomsService {
     }
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Room> {
     try {
       const room = await this.roomRepository.findOne({ where: { id } });
       if (!room) {
         this.logger.error(`No Room with id: ${id}`);
-        return new HttpException('Room not found', HttpStatus.NOT_FOUND);
+        throw new HttpException('Room not found', HttpStatus.NOT_FOUND);
       }
       this.logger.info('Room found');
-      return {
-        statusCode: HttpStatus.OK,
-        message: 'Room found',
-        room,
-      };
+      return room;
     } catch (error) {
       this.logger.error({ error }, 'Failed to retrieve rooms');
       throw new HttpException(
@@ -107,5 +103,17 @@ export class RoomsService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  async deleteRoom(id: number) {
+    const room = await this.roomRepository.delete(id);
+    if (!room) {
+      throw new HttpException('Room not found', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      statusCode: HttpStatus.NO_CONTENT,
+      message: 'Room Deleted!',
+    };
   }
 }

@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/role.decorator';
 
@@ -18,6 +23,13 @@ export class RoleGuard implements CanActivate {
 
     if (!user || !user.userRole) {
       return false;
+    }
+
+    // Check if user's role matches any of the required roles
+    if (!requiredRoles.includes(user.role)) {
+      throw new ForbiddenException(
+        'You do not have the necessary permissions to access this resource.',
+      );
     }
 
     return requiredRoles.includes(user.userRole);
