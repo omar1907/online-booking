@@ -1,10 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { FilterBookingsDto } from './dto/Filter-booking-dto';
 import { Role } from 'src/auth/decorators/role.decorator';
-
 
 @Controller('bookings')
 export class BookingsController {
@@ -13,15 +22,19 @@ export class BookingsController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async createBooking(
-    @Query() req,
+    @Req() req,
     @Body()
     body: {
       bookingDto: CreateBookingDto;
       roomId: number;
     },
   ) {
+    console.log('request: ', req.user);
+    console.log('body:', body);
     const userId = req.user.id;
     const { bookingDto, roomId } = body;
+    console.log('Booking Dto: ', bookingDto);
+
     return this.bookingsService.createBooking(bookingDto, userId, roomId);
   }
 
@@ -44,7 +57,7 @@ export class BookingsController {
   @Get()
   async getAllBookingsForUser(@Req() req) {
     const userId = req.user.id;
-    return await this.bookingsService.getAllBookingsForUser(userId); 
+    return await this.bookingsService.getAllBookingsForUser(userId);
   }
 
   @Get(':id')
