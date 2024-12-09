@@ -24,4 +24,13 @@ export class MailService {
       text: `Your password reset code is : \n ${message}.`,
     });
   }
+
+  async notifyUser(email: string, message: string) {
+    await this.transporter.sendMail({
+      from: 'NestJS App <hassanelsherbiny.tests23@gmail.com>', // sender address
+      to: email,
+      subject: 'NestJS App',
+      text: message,
+  })
+}
 }

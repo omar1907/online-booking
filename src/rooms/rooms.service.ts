@@ -182,10 +182,11 @@ export class RoomsService {
   }
 
   async deleteRoom(id: number) {
-    const room = await this.roomRepository.delete(id);
-    if (!room) {
-      throw new HttpException('Room not found', HttpStatus.NOT_FOUND);
+    const isRoomBooked = await this.findOne(id)
+    if (isRoomBooked.availabilityStatus === AvailabilityStatusEnum.UNAVAILABLE) {
+      throw new HttpException('Room is Booking and mot available', HttpStatus.NOT_FOUND);
     }
+      await this.roomRepository.delete(id);
 
     return {
       statusCode: HttpStatus.NO_CONTENT,
