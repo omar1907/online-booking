@@ -1,5 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entites/user.entity';
 import { MoreThan, Repository } from 'typeorm';
@@ -25,7 +30,6 @@ export class UsersService {
     const user = await this.userRepository.findOne({
       where: { email },
     });
-
     return user;
   }
 
@@ -69,7 +73,6 @@ export class UsersService {
     };
   }
 
-  
   async deleteUser(id: number) {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
@@ -105,10 +108,7 @@ export class UsersService {
   }
 
   async updatePassword(userId: number, newPassword: string): Promise<void> {
-    await this.userRepository.update(
-      { id: userId },
-      { password: newPassword },
-    );
+    await this.userRepository.update({ id: userId }, { password: newPassword });
   }
 
   async clearResetCode(userId: number) {

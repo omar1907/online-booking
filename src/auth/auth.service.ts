@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { SignUpDto } from './dto/register.dto';
 import * as bcrypt from 'bcryptjs';
@@ -47,7 +52,7 @@ export class AuthService {
   async login(loginDto: SignInDto) {
     try {
       const user = await this.userService.findByEmail(loginDto.email);
-      const Pass = await bcrypt.compare(loginDto.password, user.password)
+      const Pass = await bcrypt.compare(loginDto.password, user.password);
 
       if (!user || !Pass) {
         throw new HttpException('Invalid Credentials ', HttpStatus.BAD_REQUEST);
@@ -80,32 +85,35 @@ export class AuthService {
     }
   }
 
-    async forgetPassword(email: string):Promise<{message: string}> {
-      const user = await this.userService.findByEmail(email)
-      if(!user) {
-        throw new UnauthorizedException('Invalid email')
-      }
-      const resetCode = crypto.randomBytes(20).toString('hex')
-      const hashedCode = await bcrypt.hash(resetCode, 10);
-
-      await this.userService.updateResetToken(user.id, hashedCode);
-      const resetCodeMsg = `To reset your password, take the following token code: ${resetCode}`;
-      await this.mailService.sendPasswordReset(user.email, resetCodeMsg);
-  
-      return { message: 'Password reset link sent to your email' };
+  async forgetPassword(email: string): Promise<{ message: string }> {
+    const user = await this.userService.findByEmail(email);
+    if (!user) {
+      throw new UnauthorizedException('Invalid email');
     }
+    const resetCode = crypto.randomBytes(20).toString('hex');
+    const hashedCode = await bcrypt.hash(resetCode, 10);
 
-    async resetPassword(resetCode: string , newPassword: string ): Promise<{ message: string; token: string }> {
-      const user = await this.userService.findOneByresetCode(resetCode);
-      if (!user || (await bcrypt.compare(resetCode, user.resetCode))) {
-        throw new UnauthorizedException('Invalid or expired reset resetCode');
-      }
-      await this.userService.updatePassword(user.id, newPassword);
-      await this.userService.clearResetCode(user.id);
-  
-      // Generate a new access resetCode
-      const userToken = createPayload(user, user.role);
-      const token = createJwtToken({ payload: userToken });
-      return { message: 'Password reset successful', token };
+    await this.userService.updateResetToken(user.id, hashedCode);
+    const resetCodeMsg = `To reset your password, take the following token code: ${resetCode}`;
+    await this.mailService.sendPasswordReset(user.email, resetCodeMsg);
+
+    return { message: 'Password reset link sent to your email' };
+  }
+
+  async resetPassword(
+    resetCode: string,
+    newPassword: string,
+  ): Promise<{ message: string; token: string }> {
+    const user = await this.userService.findOneByresetCode(resetCode);
+    if (!user || (await bcrypt.compare(resetCode, user.resetCode))) {
+      throw new UnauthorizedException('Invalid or expired reset resetCode');
     }
+    await this.userService.updatePassword(user.id, newPassword);
+    await this.userService.clearResetCode(user.id);
+
+    // Generate a new access resetCode
+    const userToken = createPayload(user, user.role);
+    const token = createJwtToken({ payload: userToken });
+    return { message: 'Password reset successful', token };
+  }
 }
