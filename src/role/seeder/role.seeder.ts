@@ -20,6 +20,7 @@ export class RoleSeeder implements OnApplicationBootstrap {
         const role = this.roleRepository.create({ name: roleName });
         await this.roleRepository.save(role);
       }
+      console.log(`Role "${roleName}" created or updated.`);
     }
   }
 }

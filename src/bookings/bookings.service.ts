@@ -33,10 +33,12 @@ export class BookingsService {
   ) {
     const user = await this.userService.findById(userId);
     const room = await this.roomsService.findOne(roomId);
+    const parsedStartDate = new Date(bookingDto.startDate);
+    const parsedEndDate = new Date(bookingDto.endDate);
     const isRoomAvailable = await this.isRoomAvailable(
       roomId,
-      bookingDto.startDate,
-      bookingDto.endDate,
+      parsedStartDate,
+      parsedEndDate,
     );
 
     console.log('Room Availability: ', isRoomAvailable);
@@ -54,8 +56,8 @@ export class BookingsService {
     }
 
     const duration = this.calculateBookingDuration(
-      bookingDto.startDate,
-      bookingDto.endDate,
+      parsedStartDate,
+      parsedEndDate,
     );
 
     const totalPrice = duration * room.pricePerNight;
@@ -69,7 +71,7 @@ export class BookingsService {
     await this.bookingRepository.save(booking);
 
     const Msg = `'Notification Booking Created at Room ' : ${booking.room}`;
-    await this.mailService.notifyUser(user.email, Msg);
+    // await this.mailService.notifyUser(user.email, Msg);
 
     return {
       statusCode: HttpStatus.CREATED,
