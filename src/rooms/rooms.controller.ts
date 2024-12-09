@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -43,5 +44,10 @@ export class RoomsController {
     @Body() updateRoomDto: UpdateRoomDto,
   ) {
     return await this.roomService.update(id, updateRoomDto);
+  }
+
+  @Delete(':id')
+  async deleteRoom(@Param('id') id: number) {
+    return await this.roomService.deleteRoom(id);
   }
 }
