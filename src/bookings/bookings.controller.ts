@@ -23,19 +23,9 @@ export class BookingsController {
   @Post()
   async createBooking(
     @Req() req,
-    @Body()
-    body: {
-      bookingDto: CreateBookingDto;
-      roomId: number;
-    },
-  ) {
-    console.log('request: ', req.user);
-    console.log('body:', body);
+    @Body() bookingDto: CreateBookingDto) {
     const userId = req.user.id;
-    const { bookingDto, roomId } = body;
-    console.log('Booking Dto: ', bookingDto);
-
-    return this.bookingsService.createBooking(bookingDto, userId, roomId);
+    return this.bookingsService.createBooking(bookingDto, userId);
   }
 
   @Role('admin')

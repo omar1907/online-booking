@@ -29,14 +29,13 @@ export class BookingsService {
   async createBooking(
     bookingDto: CreateBookingDto,
     userId: number,
-    roomId: number,
   ) {
     const user = await this.userService.findById(userId);
-    const room = await this.roomsService.findOne(roomId);
+    const room = await this.roomsService.findOne(bookingDto.roomId);
     const parsedStartDate = new Date(bookingDto.startDate);
     const parsedEndDate = new Date(bookingDto.endDate);
     const isRoomAvailable = await this.isRoomAvailable(
-      roomId,
+      bookingDto.roomId,
       parsedStartDate,
       parsedEndDate,
     );

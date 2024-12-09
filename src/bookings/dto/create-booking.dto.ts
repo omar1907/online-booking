@@ -8,4 +8,7 @@ export class CreateBookingDto {
   @IsDateString()
   @IsNotEmpty()
   endDate: Date;
+  
+  @IsNotEmpty()
+  roomId: number;
 }
