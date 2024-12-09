@@ -13,7 +13,7 @@ export class BookingsController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async createBooking(
-    @Query() req,
+    @Req() req,
     @Body()
     body: {
       bookingDto: CreateBookingDto;
